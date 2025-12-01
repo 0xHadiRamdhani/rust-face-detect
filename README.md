@@ -146,18 +146,11 @@ face-detect-rust/
 ├── src/
 │   ├── main.rs              # Entry point & server setup
 │   ├── lib.rs               # Library exports
-│   ├── api/                 # API endpoints
-│   │   ├── health.rs        # Health check
-│   │   ├── upload.rs        # File upload handler
-│   │   └── crop.rs          # Face cropping
-│   ├── detection/           # Face detection logic
-│   │   ├── detector.rs      # Main detector
-│   │   └── models.rs        # Detection models
-│   ├── models/              # Data structures
-│   │   ├── api_response.rs  # API response structures
-│   │   └── error.rs         # Error types
-│   └── utils/               # Utilities
-│       └── image.rs         # Image processing utilities
+│   ├── api.rs               # Unified API endpoints
+│   ├── detection.rs         # Core detection functionality
+│   ├── detector.rs          # Face detector implementation
+│   ├── error.rs             # Unified error handling
+│   └── types.rs             # Type definitions
 ├── static/                  # Frontend files
 │   ├── index.html           # Main page
 │   ├── css/
@@ -167,7 +160,8 @@ face-detect-rust/
 ├── uploads/                 # Temporary upload directory
 ├── Cargo.toml               # Rust dependencies
 ├── README.md                # Documentation
-└── .gitignore              # Git ignore rules
+├── .clippy.toml             # Clippy configuration
+└── rustfmt.toml             # Rustfmt configuration
 ```
 
 ## 🛠️ Development Commands
@@ -289,3 +283,229 @@ Untuk bug report atau feature request, silakan buat issue di repository ini.
 ---
 
 **Happy Face Detecting!** 🎯✨
+
+---
+
+## 📋 Technical Architecture Details
+
+### System Architecture
+```mermaid
+graph TB
+    subgraph "Client Layer"
+        A[Browser Frontend]
+    end
+    
+    subgraph "API Layer"
+        B[Actix-web Server]
+        C[Upload Handler]
+        D[Health Check]
+    end
+    
+    subgraph "Business Logic"
+        E[Face Detector]
+        F[Image Processor]
+        G[Result Validator]
+    end
+    
+    subgraph "External Libraries"
+        H[MediaPipe]
+        I[Image Crate]
+        J[Serde JSON]
+    end
+    
+    subgraph "Storage"
+        K[Temp Uploads]
+        L[Static Files]
+    end
+    
+    A -->|HTTP Request| B
+    B --> C
+    B --> D
+    C --> E
+    C --> F
+    E --> H
+    F --> I
+    C --> G
+    G --> J
+    C --> K
+    B --> L
+```
+
+### Upload and Detection Flow
+```mermaid
+sequenceDiagram
+    participant User
+    participant Frontend
+    participant API
+    participant Detector
+    participant MediaPipe
+    participant Storage
+    
+    User->>Frontend: Select/Drag Image
+    Frontend->>Frontend: Validate File
+    Frontend->>API: POST /api/upload
+    API->>API: Parse Multipart Form
+    API->>Storage: Save Temporary File
+    API->>Detector: Process Image
+    Detector->>MediaPipe: Run Face Detection
+    MediaPipe-->>Detector: Detection Results
+    Detector->>Detector: Process Results
+    Detector->>Storage: Generate Processed Image
+    Detector-->>API: Return Results
+    API-->>Frontend: JSON Response
+    Frontend->>Frontend: Display Results
+    Frontend->>User: Show Detected Faces
+```
+
+### Frontend Design
+
+#### UI/UX Design Overview
+Aplikasi ini memiliki interface yang clean dan modern dengan fokus pada kemudahan penggunaan untuk upload gambar dan melihat hasil deteksi wajah.
+
+#### Layout Structure
+```
++----------------------------------+
+|  Face Detection Rust             |
+|  [Logo/Title]                    |
++----------------------------------+
+|                                  |
+|  +----------------------------+  |
+|  |  Drop Image Here           |  |
+|  |  or click to upload        |  |
+|  +----------------------------+  |
+|                                  |
+|  [Upload Button]                 |
+|                                  |
++----------------------------------+
+|  Results Area                    |
+|  +----------------------------+  |
+|  | Original Image | Processed |  |
+|  |                |   Image   |  |
+|  +----------------------------+  |
+|  |  Detected Faces: 3         |  |
+|  |  - Face 1: (x:100, y:150)  |  |
+|  |  - Face 2: (x:250, y:200)  |  |
+|  |  - Face 3: (x:400, y:180)  |  |
+|  +----------------------------+  |
++----------------------------------+
+```
+
+#### Color Scheme
+```css
+:root {
+  --primary-color: #2563eb;      /* Blue */
+  --secondary-color: #64748b;    /* Gray */
+  --success-color: #10b981;      /* Green */
+  --error-color: #ef4444;        /* Red */
+  --warning-color: #f59e0b;      /* Yellow */
+  --background: #ffffff;           /* White */
+  --surface: #f8fafc;            /* Light gray */
+  --text-primary: #1e293b;       /* Dark gray */
+  --text-secondary: #64748b;       /* Medium gray */
+}
+```
+
+### Implementation Plan
+
+#### Technical Architecture
+- **Framework**: Actix-web (async web framework)
+- **Face Detection**: MediaPipe Rust bindings
+- **Image Processing**: image crate + imageproc
+- **File Upload**: actix-multipart
+- **Serialization**: serde + serde_json
+- **Error Handling**: snafu (unified error handling)
+
+#### Implementation Phases
+
+**Phase 1: Foundation (Priority: High)**
+- Initialize Rust project dengan `cargo new face-detect-rust`
+- Setup Cargo.toml dengan dependencies
+- Create project structure
+- Basic server setup
+
+**Phase 2: Core Detection (Priority: High)**
+- Implement face detection module
+- Setup MediaPipe integration
+- Create detection models
+- Basic detection testing
+
+**Phase 3: API Development (Priority: High)**
+- File upload endpoint
+- Image processing pipeline
+- Response formatting
+- Error handling dengan snafu
+
+**Phase 4: Frontend (Priority: Medium)**
+- HTML interface
+- CSS styling
+- JavaScript functionality
+- Canvas drawing
+
+**Phase 5: Integration (Priority: Medium)**
+- Frontend-Backend integration
+- End-to-end testing
+- Performance optimization
+- Bug fixes
+
+#### Performance Targets
+- **Upload Speed**: < 2 seconds untuk 5MB image
+- **Detection Speed**: < 1 second per face
+- **Response Time**: < 3 seconds total
+- **Memory Usage**: < 500MB untuk single request
+- **Concurrent Users**: Support 100+ concurrent users
+
+#### Security Considerations
+- File type validation
+- File size limits
+- Input sanitization
+- CORS configuration
+- Error message sanitization
+
+#### Browser Support
+- Chrome 80+
+- Firefox 75+
+- Safari 13+
+- Edge 80+
+- Mobile browsers
+
+### Project Summary
+
+#### Key Features
+✅ **Face Detection**: Multiple face detection dengan high accuracy  
+✅ **Image Upload**: Drag & drop atau click to upload  
+✅ **Visual Results**: Bounding boxes pada wajah yang terdeteksi  
+✅ **Face Cropping**: Crop wajah yang terdeteksi  
+✅ **Real-time Processing**: Fast processing dengan async Rust  
+✅ **Modern UI**: Clean dan responsive design  
+✅ **API Integration**: RESTful API untuk integrasi  
+✅ **Error Handling**: Comprehensive error handling  
+
+#### Success Criteria
+- ✅ Face detection berfungsi dengan akurat
+- ✅ Upload dan processing berjalan lancar
+- ✅ UI/UX intuitif dan responsive
+- ✅ API stabil dan documented
+- ✅ Error handling comprehensive
+- ✅ Performance sesuai target
+- ✅ Security measures implemented
+- ✅ Documentation lengkap
+
+#### Future Enhancements
+- [ ] Face recognition (identifikasi orang)
+- [ ] Video face detection
+- [ ] Batch processing
+- [ ] Mobile app
+- [ ] Advanced analytics
+- [ ] Machine learning model training
+- [ ] Cloud integration
+- [ ] Real-time processing
+
+#### Estimated Timeline
+- **Phase 1**: 1-2 hari
+- **Phase 2**: 2-3 hari  
+- **Phase 3**: 1-2 hari
+- **Phase 4**: 2-3 hari
+- **Phase 5**: 1-2 hari
+- **Phase 6**: 2-3 hari
+
+**Total**: 9-15 hari kerja
