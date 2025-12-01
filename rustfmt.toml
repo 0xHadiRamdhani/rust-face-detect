@@ -1,0 +1,56 @@
+# Rustfmt configuration for Face Detection Rust
+
+# Maximum line width
+max_width = 100
+# Ideal line width
+use_small_heuristics = "Max"
+# Don't wrap comments
+wrap_comments = false
+# Don't format comments
+format_code_in_doc_comments = true
+# Normalize comments
+normalize_comments = true
+# Use field initialize shorthand
+use_field_init_shorthand = true
+# Use try shorthand
+use_try_shorthand = true
+# Format strings
+format_strings = true
+# Don't reorder imports
+reorder_imports = true
+# Don't reorder modules
+reorder_modules = true
+# Remove trailing semicolons
+remove_trailing_semicolon = true
+# Use match block formatting
+match_block_trailing_comma = true
+# Don't merge imports
+merge_imports = false
+# Use short variant width
+short_variant_width = 35
+# Use single line if else
+single_line_if_else_max_width = 50
+# Use space after colon
+space_after_colon = true
+# Use space before colon
+space_before_colon = false
+# Use space around range
+spaces_around_ranges = false
+# Use space within parentheses
+spaces_within_parens_and_brackets = false
+# Use tab spaces
+tab_spaces = 4
+# Use trailing comma
+trailing_comma = "Vertical"
+# Use trailing semicolon
+trailing_semicolon = true
+# Use type punctuation
+type_punctuation_density = "Wide"
+# Use where density
+where_density = "Compressed"
+# Use where layout
+where_layout = "Horizontal"
+# Use where predicates
+where_pred_indent = "Compressed"
+# Use wrap match arms
+wrap_match_arms = true

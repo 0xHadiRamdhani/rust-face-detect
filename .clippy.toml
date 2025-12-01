@@ -1,0 +1,48 @@
+# Clippy configuration for Face Detection Rust
+
+# Enable all clippy lints
+all = "deny"
+pedantic = "deny"
+nursery = "warn"
+cargo = "warn"
+
+# Additional specific lints
+cognitive-complexity-threshold = 30
+too-many-arguments-threshold = 7
+type-complexity-threshold = 250
+single-char-binding-names-threshold = 5
+
+# Allow some lints that might be too strict for this project
+allow = [
+    "module_name_repetitions",  # Allow repetition in module names for clarity
+    "similar_names",           # Allow similar names if they make sense contextually
+    "must_use_candidate",      # Allow functions that don't need #[must_use]
+    "missing_errors_doc",      # Allow missing error documentation in some cases
+    "missing_panics_doc",      # Allow missing panic documentation
+]
+
+# Deny these specific lints
+deny = [
+    "unwrap_used",
+    "expect_used",
+    "panic",
+    "unimplemented",
+    "todo",
+    "unreachable",
+    "dbg_macro",
+    "print_stdout",
+    "print_stderr",
+]
+
+# Warn about these
+warn = [
+    "cast_lossless",
+    "cast_possible_truncation",
+    "cast_possible_wrap",
+    "cast_precision_loss",
+    "cast_sign_loss",
+    "float_arithmetic",
+    "integer_arithmetic",
+    "string_add",
+    "string_add_assign",
+]
