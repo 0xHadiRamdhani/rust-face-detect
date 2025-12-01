@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Detection Rust</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 Face Detection Rust</h1>
+            <p>Upload an image to detect faces using Rust and OpenCV</p>
+        </header>
+
+        <main>
+            <!-- Upload Section -->
+            <section class="upload-section">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-content">
+                        <div class="upload-icon">📷</div>
+                        <h3>Drop your image here</h3>
+                        <p>or <span class="upload-link">click to upload</span></p>
+                        <small>Supports JPG, PNG (max 10MB)</small>
+                    </div>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                </div>
+
+                <div class="upload-actions">
+                    <button id="uploadBtn" class="btn btn-primary" disabled>
+                        <span class="btn-text">Upload Image</span>
+                        <span class="btn-loading" style="display: none;">Processing...</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section" id="resultsSection" style="display: none;">
+                <h2>Detection Results</h2>
+
+                <div class="results-summary">
+                    <div class="summary-item">
+                        <span class="label">Total Faces:</span>
+                        <span class="value" id="totalFaces">0</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="label">Processing Time:</span>
+                        <span class="value" id="processingTime">0ms</span>
+                    </div>
+                </div>
+
+                <div class="images-container">
+                    <div class="image-box">
+                        <h3>Original Image</h3>
+                        <img id="originalImage" alt="Original image">
+                    </div>
+                    <div class="image-box">
+                        <h3>Processed Image</h3>
+                        <img id="processedImage" alt="Processed image with detected faces">
+                    </div>
+                </div>
+
+                <div class="faces-list">
+                    <h3>Detected Faces</h3>
+                    <div id="facesList"></div>
+                </div>
+
+                <div class="results-actions">
+                    <button id="resetBtn" class="btn btn-secondary">Upload Another Image</button>
+                </div>
+            </section>
+
+            <!-- Loading Section -->
+            <section class="loading-section" id="loadingSection" style="display: none;">
+                <div class="loading-content">
+                    <div class="spinner"></div>
+                    <p>Processing your image...</p>
+                    <small>This may take a few seconds</small>
+                </div>
+            </section>
+
+            <!-- Error Section -->
+            <section class="error-section" id="errorSection" style="display: none;">
+                <div class="error-content">
+                    <div class="error-icon">❌</div>
+                    <h3>Oops! Something went wrong</h3>
+                    <p id="errorMessage"></p>
+                    <button id="retryBtn" class="btn btn-primary">Try Again</button>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Powered by <strong>Rust</strong> and <strong>OpenCV</strong></p>
+            <p><small>Face Detection API v1.0.0</small></p>
+        </footer>
+    </div>
+
+    <script src="/static/js/main.js"></script>
+</body>
+
+</html>
